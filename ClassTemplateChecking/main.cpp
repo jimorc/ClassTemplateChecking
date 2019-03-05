@@ -1,4 +1,5 @@
 #include <type_traits>
+#include <iostream>
 
 namespace test1 {
     // From http://coliru.stacked-crooked.com/a/eaeac2b9008a97d9 in answer to 'is_base_of of generic type'
@@ -35,37 +36,6 @@ namespace test2 {
     }
 }
 
-namespace test3 {
-    // based on one of guestgulkan's answers to 'writing and using a C++ template to check for a function's existence'
-    // at http://www.cplusplus.com/beginner/70134/
-    template <typename T>
-    class Has_Func
-    {
-        typedef char one;
-        typedef long two;
-
-        template <typename C>
-        static const one test(decltype(&C::has_func));
-        template <typename C>
-        static const two test(...)
-        {
-            return 962;         // could be any long int value
-        }
-
-    public:
-        template <typename U>
-        static constexpr bool has_func()
-        {
-            return (sizeof(test(U)) == sizeof(char));
-        }
-
-        static constexpr bool has_func()
-        {
-            return false;
-        }
-    };
-}
-
 template<typename T>
 class A
 {
@@ -87,7 +57,6 @@ public:
     {
         static_assert(test1::is_base_of_template_t<A, T>::value, "No!");
         static_assert(test2::has_func(T()), "Another No!");
-        static_assert(test3::Has_Func<T>::has_func(), "Does not have func()");
     }
 };
 
